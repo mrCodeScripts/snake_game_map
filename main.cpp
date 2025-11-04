@@ -76,8 +76,9 @@ int main()
                 }
                 */
 
-                if ()
+                if (i == )
                 {
+
                 }
                 else
                 {
