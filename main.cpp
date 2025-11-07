@@ -22,6 +22,14 @@ void hideCursor () {
     SetConsoleCursorInfo(hcursor, &cursorInfo);
 }
 
+void showCursor () {
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInf;
+    GetConsoleCursorInfo(handle, &cursorInf);
+    cursorInf.bVisible = TRUE;
+    SetConsoleCursorInfo(handle, &cursorInf);
+}
+
 void snakeControls(std::pair<int, int> &snakeDir)
 {
     if (_kbhit())
@@ -55,8 +63,11 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
 
     bool animate = true;
-    int mapWidth = 100;
+    bool clearedScreen = false;
+    int mapWidth = 50;
     int mapHeight = 30;
+    std::string block = u8"█";
+    std::string snakeBod = u8"▓";
 
     std::pair<int, int> playerPos = {int(mapWidth / 2), int(mapHeight / 2)};
     std::vector<std::pair<int, int>> snake;
@@ -67,23 +78,19 @@ int main()
     };
     std::pair<int, int> snakeDir = {1, 0};
 
-    std::string block = u8"█";
-    std::string snakeBod = u8"▓";
-
     while (animate)
     {
-
-// Clear the console (platform dependent)
-/*
-#ifdef _WIN32
-        system("cls");
-#else
-        system("clear");
-#endif
-*/
-
         hideCursor();
-        goToTop();
+        if (!clearedScreen) {
+            #ifdef WIN_32
+                system("cls");
+            #else
+                system("clear");
+            #endif
+            clearedScreen = true;
+        } else {
+            goToTop();
+        }
         snakeControls(snakeDir);
 
         for (int i = 0; i < mapHeight; i++)
