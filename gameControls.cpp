@@ -83,7 +83,8 @@ void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &m
     }
 }
 
-void chooseMap (std::vector<std::vector<int>> &map) {
+void chooseMap(std::vector<std::vector<int>> &map)
+{
     std::cout << "WELCOME TO SNAKE GAME!" << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
@@ -91,35 +92,63 @@ void chooseMap (std::vector<std::vector<int>> &map) {
 
     int chosenMap;
     bool hasChosen = false;
+    bool inputError = false;
 
-    while (!hasChosen) {
+    while (!hasChosen)
+    {
         fullClearScreen();
         std::cout << "CHOOSE YOUR MAP! (use the numbers): " << std::endl;
-        for (int i = 0; i < maps.size(); i++) {
+        for (int i = 0; i < maps.size(); i++)
+        {
             std::cout << "[" << i << "]" << " MAP NAME: " << maps[i].first << std::endl;
         }
+        if (inputError) {
+            std::cout << R"(
+
+=========================================
+| ERROR: PLEASE CHOOSE ONLY ON THE LISTED MAPS |
+=========================================
+
+        )";
+        } else {
+            std::cout << ' ';
+        }
+        std::cout << std::endl;
+
         std::cout << "\n ENTER MAP: ";
         std::cin >> chosenMap;
 
-        if (std::cin.fail()) {
+        if (chosenMap < 0 || chosenMap > static_cast<int>(maps.size() - 1) || std::cin.fail())
+        {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        } continue;
+            inputError = true;
+            continue;
+        }
 
-        if ((chosenMap && chosenMap >= 0) || (chosenMap && chosenMap <= maps.size() - 1)) hasChosen = true;
+        if (chosenMap >= 0 && chosenMap < static_cast<int>(maps.size()))
+        {
+            hasChosen = true;
+        }
+        else
+        {
+            inputError = true;
+        }
     }
     map = maps[chosenMap].second;
 }
 
-void fullClearScreen () {
+void fullClearScreen()
+{
 #ifdef _WIN32
-            system("cls");
+    system("cls");
 #else
-            system("clear");
+    system("clear");
 #endif
 }
 
-void gameOverScreen () {
+void gameOverScreen()
+{
     std::cout << "\033[91m" << u8R"(
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⢀⣤⣤⣤⣶⣶⣷⣤⣀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣶⣶⣶⠀⠀⠀⠀⣠⣾⣿⣿⡇⠀⣿⣿⣿⣿⠿⠛⠉⠉⠀
@@ -141,10 +170,12 @@ void gameOverScreen () {
 ⠀⠀⠀⠀⢹⣿⣿⣇⠀⠀⢀⣠⣴⣿⣿⣿⡿⠀⠈⣿⣿⣿⣿⡟⠀⠀⠀⢰⣿⣿⣿⠿⠟⠛⠉⠁⠸⢿⡟⠀⠀⠀⠀⠀⠀⠀⠘⠋⠁⠀⠀
 ⠀⠀⠀⠀⠈⢻⣿⣿⣿⣾⣿⣿⣿⣿⣿⠟⠁⠀⠀⠸⣿⣿⡿⠁⠀⠀⠀⠈⠙⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠉⠛⠿⠿⠿⠿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-    )" << "\033[0m" << std::endl;
+    )" << "\033[0m"
+              << std::endl;
 }
 
-void gameDone () {
+void gameDone()
+{
 
     std::cout << "\033[92m" << u8R"(
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣀⢠⡤⠤⠖⠒⠒⠒⠲⣆⠀⠀⠀⠀⣾⠋⠉⠉⠛⢷⠀⣴⠖⠒⠤⣄⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -166,5 +197,6 @@ void gameDone () {
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠿⠿⠿⠟⠛⠁⠀⠀⠀⠉⠛⠛⠛⠛⠉⠁⠀⠀⠀⠙⠿⢿⣿⣿⡿⠿⠋⢀⣿⣿⣧⡀⠀⠀⣠⡇⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ 
-    )" << "\033[0m" << std::endl;
+    )" << "\033[0m"
+              << std::endl;
 }
