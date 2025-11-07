@@ -13,6 +13,8 @@ void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &m
 void chooseMap(std::vector<std::vector<int>> &map);
 void fullClearScreen();
 void gameOverScreen();
+int randomNumber(int max, int min);
+void generateFoods(std::vector<std::vector<int>> &map, int maxFood);
 void gameDone();
 
 #endif

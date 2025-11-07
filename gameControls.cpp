@@ -9,6 +9,8 @@
 #include <format>
 #include "headers/gameControls.h"
 #include "headers/maps.h"
+#include <algorithm>
+#include <random>
 
 void goToTop()
 {
@@ -172,6 +174,26 @@ void gameOverScreen()
 ⠀⠀⠀⠀⠀⠀⠉⠛⠿⠿⠿⠿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
     )" << "\033[0m"
               << std::endl;
+}
+
+int randomNumber (int min, int max)
+{
+    std::random_device random_device;
+    std::mt19937 seedGenerator(random_device());
+    std::uniform_int_distribution<> distribution(min, max);
+    return distribution(seedGenerator);
+}
+
+void generateFoods(std::vector<std::vector<int>> &maps, int maxFood) {
+    std::vector<std::pair<int, int>> randomFoods;
+    for (int k = 0; k < maxFood; k++) {
+
+    }
+
+    for (int i = 0; i < maps.size(); i++) {
+        for (int j = 0; j < maps[0].size(); j++) {
+        }
+    }
 }
 
 void gameDone()
