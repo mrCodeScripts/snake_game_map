@@ -38,10 +38,10 @@ void snakeControls(std::pair<int, int> &snakeDir)
         switch (k)
         {
         case 'w':
-            snakeDir = {-1, 0};
+            snakeDir = {0, -1}; 
             break;
         case 's':
-            snakeDir = {1, 0};
+            snakeDir = {0, 1};
             break;
         case 'a':
             snakeDir = {-1, 0};
@@ -53,8 +53,12 @@ void snakeControls(std::pair<int, int> &snakeDir)
     }
 }
 
-void updateSnake(std::vector<std::pair<int, int>> &snakeSeg)
+void updateSnake(std::vector<std::pair<int, int>> &snakeSeg, std::pair<int, int> &snakeDir)
 {
+    std::pair<int, int> newHead = {snakeSeg[0].first + snakeDir.first, snakeSeg[0].second + snakeDir.second};
+
+    snakeSeg.insert(snakeSeg.begin(), newHead);
+    snakeSeg.pop_back();
 }
 
 int main()
@@ -66,8 +70,12 @@ int main()
     bool clearedScreen = false;
     int mapWidth = 50;
     int mapHeight = 30;
-    std::string block = u8"█";
-    std::string snakeBod = u8"▓";
+    std::string block = u8"⬛";
+    std::string snakeBod = u8"⬛";
+
+    /**
+     * FOR MORE SYMBOLS GO TO : https://www.alt-codes.net/square-symbols
+     */
 
     std::pair<int, int> playerPos = {int(mapWidth / 2), int(mapHeight / 2)};
     std::vector<std::pair<int, int>> snake;
@@ -82,7 +90,7 @@ int main()
     {
         hideCursor();
         if (!clearedScreen) {
-            #ifdef WIN_32
+            #ifdef _WIN32 
                 system("cls");
             #else
                 system("clear");
@@ -92,6 +100,7 @@ int main()
             goToTop();
         }
         snakeControls(snakeDir);
+        updateSnake(snakeSeg, snakeDir);
 
         for (int i = 0; i < mapHeight; i++)
         {
@@ -117,38 +126,45 @@ int main()
                         if (j == 0)
                         {
                             // std::cout << u8"╔";
-                            std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            // std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            std::cout << "\033[35m" << block << "\033[0m";
                         }
                         else if (j == mapWidth - 1)
                         {
                             // std::cout << u8"╗";
-                            std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            // std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            std::cout << "\033[35m" << block << "\033[0m";
                         }
                         else
                             // std::cout << u8"═";
-                            std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            // std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            std::cout << "\033[35m" << block << "\033[0m";
                     }
                     else if (i == mapHeight - 1)
                     {
                         if (j == 0)
                         {
                             // std::cout << u8"╚";
-                            std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            // std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            std::cout << "\033[35m" << block << "\033[0m";
                         }
                         else if (j == mapWidth - 1)
                         {
                             // std::cout << u8"╝";
-                            std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            // std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            std::cout << "\033[35m" << block << "\033[0m";
                         }
                         else
                             // std::cout << u8"═";
-                            std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            // std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            std::cout << "\033[35m" << block << "\033[0m";
                     }
                     else
                     {
                         if (j == 0 || j == mapWidth - 1)
                             // std::cout << u8"║";
-                            std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            // std::cout << "\033[35m" << u8"█" << "\033[0m";
+                            std::cout << "\033[35m" << block << "\033[0m";
                         else
 
                             /**
@@ -175,6 +191,28 @@ int main()
                 }
             }
             std::cout << std::endl;
+        }
+
+
+        /**
+         * SNAKE INFORMATIONS
+         */
+        std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << std::endl;
+
+        std::cout << "DIRECTION: [ X: " << snakeDir.first << " Y:" << snakeDir.second << " ]   " << std::endl;
+        std::cout << std::endl;
+
+        std::cout << "SNAKE BOD SEGMENTS [x, y]" << std::endl;
+        for  (int j = 0; j < snakeSeg.size(); j++) {
+            if (j == 0) {
+                std::cout << "[" << snakeSeg[j].first << ", " << snakeSeg[j].second << "] HEAD      " << std::endl;
+            } else if (j == snakeSeg.size() - 1) {
+                std::cout << "[" << snakeSeg[j].first << ", " << snakeSeg[j].second << "] TAIL      " << std::endl;
+            } else {
+                std::cout << "[" << snakeSeg[j].first << ", " << snakeSeg[j].second << "] BODY     " << std::endl;
+            }
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(800));
