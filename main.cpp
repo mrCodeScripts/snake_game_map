@@ -1,5 +1,4 @@
 #include <iostream>
-#include "gameControls.h"
 #include <cstdlib>
 #include <chrono>
 #include <thread>
@@ -8,37 +7,17 @@
 #include <windows.h>
 #include <conio.h>
 #include <format>
+#include "headers/gameControls.h"
+#include "maps.h"
 
-std::vector<std::vector<int>> map = {
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-};
 
 int main()
 {
-
     SetConsoleOutputCP(CP_UTF8);
-
     bool animate = true;
     bool gameOver = false;
     bool clearedScreen = false;
-    int mapWidth = map[0].size();
-    int mapHeight = map.size();
+    std::vector<std::vector<int>> map;
     std::string block = u8"██";
     std::string snakeBod = u8"██";
     // std::string block = u8" ";
@@ -47,8 +26,9 @@ int main()
     /**
      * FOR MORE SYMBOLS GO TO : https://www.alt-codes.net/square-symbols
      */
-
-    std::pair<int, int> playerPos = {int(mapWidth / 2), int(mapHeight / 2)};
+    chooseMap(map);
+    int mapWidth = map[0].size();
+    int mapHeight = map.size();
     std::vector<std::pair<int, int>> snake;
     std::vector<std::pair<int, int>> snakeSeg = {
         {int(mapWidth / 2), int(mapHeight / 2)},

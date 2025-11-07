@@ -10,6 +10,7 @@ void showCursor();
 void snakeControls(std::pair<int, int> &snakeDir);
 void updateSnake(std::vector<std::pair<int, int>> &snakeSeg, std::pair<int, int> &snakeDir);
 void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &map, bool &gameOver);
+void chooseMap(std::vector<std::vector<int>>);
 void fullClearScreen();
 void gameOverScreen();
 

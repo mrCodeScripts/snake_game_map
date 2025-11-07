@@ -1,5 +1,4 @@
 #include <iostream>
-#include "gameControls.h"
 #include <cstdlib>
 #include <chrono>
 #include <thread>
@@ -8,6 +7,8 @@
 #include <windows.h>
 #include <conio.h>
 #include <format>
+#include "headers/gameControls.h"
+#include "maps.h"
 
 void goToTop()
 {
@@ -80,13 +81,19 @@ void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &m
     }
 }
 
-void chooseMap () {
+void chooseMap (std::vector<std::vector<int>> &map) {
     std::cout << "WELCOME TO SNAKE GAME!" << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
 
-    std::cout << "CHOOSE YOUR MAP!" << std::endl;
+    int chosenMap;
+    std::cout << "CHOOSE YOUR MAP! (use the numbers): " << std::endl;
+    for (int i = 0; i < maps.size(); i++) {
+        std::cout << "[" << i << "]" << " MAP NAME: " << maps[i].first << std::endl;
+    }
+    std::cout << "\n ENTER MAP: ";
+    std::cin >> chosenMap;
 }
 
 void fullClearScreen () {
