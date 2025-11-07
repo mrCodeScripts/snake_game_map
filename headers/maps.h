@@ -5,6 +5,6 @@
 #include <utility>
 #include <string>
 
-std::vector<std::pair<std::string, std::vector<std::vector<int>>>> maps;
+extern std::vector<std::pair<std::string, std::vector<std::vector<int>>>> maps;
 
 #endif

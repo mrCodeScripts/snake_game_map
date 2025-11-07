@@ -8,7 +8,7 @@
 #include <conio.h>
 #include <format>
 #include "headers/gameControls.h"
-#include "maps.h"
+#include "headers/maps.h"
 
 
 int main()
@@ -50,7 +50,7 @@ int main()
             goToTop();
         }
 
-        snakeControls(snakeDir);
+        snakeControls(snakeDir, animate);
         updateSnake(snakeSeg, snakeDir);
         detectCollision(snakeSeg[0], map, gameOver);
 
@@ -127,6 +127,11 @@ int main()
         {
             fullClearScreen();
             gameOverScreen();
+        }
+
+        if (!gameOver && !animate) {
+            fullClearScreen();
+            gameDone();
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(800));
