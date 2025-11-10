@@ -29,25 +29,33 @@ int main()
 
     bool animate = true;
     int chosenIndex = 0;
+    bool initialClear = false;
 
     while (animate)
     {
-// cursorTotop();
+        if (initialClear)
+        {
+            cursorTotop();
+        }
+        else
+        {
 #ifdef _WIN32
-        system("cls");
+            system("cls");
 #else
-        system("clear");
+            system("clear");
 #endif
+        }
 
+        std::string frame;
         for (int i = 0; i < mapChoosing.size(); i++)
         {
             if (i == chosenIndex)
             {
-                std::cout << "\033[1;32m" << mapChoosing[i].second << "\033[0m" << std::endl;
+                frame += "- \033[1;32m" + mapChoosing[i].second + "\033[0m \n";
             }
             else
             {
-                std::cout << "\033[32m" << mapChoosing[i].second << std::endl;
+                frame += "\033[32m" + mapChoosing[i].second + "\033[0m \n";
             }
         }
 
@@ -79,6 +87,10 @@ int main()
                     animate = false;
             }
         }
+
+        std::cout << frame << std::endl;
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     return 0;
 }

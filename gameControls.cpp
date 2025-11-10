@@ -87,53 +87,66 @@ void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &m
 
 void chooseMap(std::vector<std::vector<int>> &map)
 {
-    int chosenMap;
     bool hasChosen = false;
     bool inputError = false;
+    int mapIndex = 0;
+    bool initialClear = false;
 
     while (!hasChosen)
     {
-        fullClearScreen();
+        hideCursor();
+        std::string frame;
+
+        if (initialClear) {
+            goToTop();
+        } else {
+            fullClearScreen();
+        }
         gameStartIntroduction();
-        std::cout << "\033[1;32m" "CHOOSE YOUR MAP! (use the numbers): " << "\033[0m" << std::endl;
+        std::cout << "\033[1;32m"
+                     "CHOOSE YOUR MAP! (use the numbers): "
+                  << "\033[0m" << std::endl;
         for (int i = 0; i < maps.size(); i++)
         {
-            std::cout << "\033[32m" << "[" << i << "]" << " MAP NAME: " << maps[i].first << "\033[0m" << std::endl;
+            if (mapIndex == i)
+            {
+                frame += std::string("\033[32m") + u8" ➤ MAP NAME: " + maps[i].first + "\033[0m \n";
+            }
+            else
+            {
+                frame += std::string("\033[32m") + "[" + std::to_string(i + 1) + "] MAP NAME: " + maps[i].first + "\033[0m \n";
+            }
         }
-        if (inputError) {
-            std::cout << R"(
 
-=========================================
-| ERROR: PLEASE CHOOSE ONLY ON THE LISTED MAPS |
-=========================================
-
-        )";
-        } else {
-            std::cout << ' ';
-        }
-        std::cout << std::endl;
-
-        std::cout << "\n ENTER MAP: ";
-        std::cin >> chosenMap;
-
-        if (chosenMap < 0 || chosenMap > static_cast<int>(maps.size() - 1) || std::cin.fail())
+        if (_kbhit())
         {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            inputError = true;
-            continue;
+            int key = _getch();
+            if (key == 0 || key == 224)
+            {
+                int arrow = _getch();
+                switch (arrow)
+                {
+                case 72:
+                    mapIndex--;
+                    if (mapIndex < 0)
+                        mapIndex = maps.size() - 1;
+                    break;
+                case 80:
+                    mapIndex++;
+                    if (mapIndex > maps.size() - 1)
+                        mapIndex = 0;
+                    break;
+                case 13:
+                    hasChosen = true;
+                    break;
+                }
+            }
         }
 
-        if (chosenMap >= 0 && chosenMap < static_cast<int>(maps.size()))
-        {
-            hasChosen = true;
-        }
-        else
-        {
-            inputError = true;
-        }
+        std::cout << frame << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-    map = maps[chosenMap].second;
+    map = maps[mapIndex].second;
 }
 
 void fullClearScreen()
@@ -172,7 +185,7 @@ void gameOverScreen()
               << std::endl;
 }
 
-int randomNumber (int min, int max)
+int randomNumber(int min, int max)
 {
     std::random_device random_device;
     std::mt19937 seedGenerator(random_device());
@@ -180,14 +193,17 @@ int randomNumber (int min, int max)
     return distribution(seedGenerator);
 }
 
-void generateFoods(std::vector<std::vector<int>> &maps, int maxFood) {
+void generateFoods(std::vector<std::vector<int>> &maps, int maxFood)
+{
     std::vector<std::pair<int, int>> randomFoods;
-    for (int k = 0; k < maxFood; k++) {
-
+    for (int k = 0; k < maxFood; k++)
+    {
     }
 
-    for (int i = 0; i < maps.size(); i++) {
-        for (int j = 0; j < maps[0].size(); j++) {
+    for (int i = 0; i < maps.size(); i++)
+    {
+        for (int j = 0; j < maps[0].size(); j++)
+        {
         }
     }
 }
@@ -218,7 +234,8 @@ void gameDone()
               << std::endl;
 }
 
-void gameStartIntroduction () {
+void gameStartIntroduction()
+{
 
     std::cout << "\033[32m" << u8R"(
 ░██████╗███╗░░██╗░█████╗░██╗░░██╗███████╗  ░██████╗░░█████╗░███╗░░░███╗███████╗
@@ -227,5 +244,6 @@ void gameStartIntroduction () {
 ░╚═══██╗██║╚████║██╔══██║██╔═██╗░██╔══╝░░  ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░
 ██████╔╝██║░╚███║██║░░██║██║░╚██╗███████╗  ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗
 ╚═════╝░╚═╝░░╚══╝╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝  ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝
-    )" << "\033[0m" << std::endl;
+    )" << "\033[0m"
+              << std::endl;
 }
