@@ -13,7 +13,9 @@ void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &m
 void chooseMap(std::vector<std::vector<int>> &map);
 void fullClearScreen();
 void gameOverScreen();
+void renderGame (std::vector<std::vector<int>> &map, std::vector<std::pair<int, int>> &snakeSeg, std::string &snakeBod, std::string &block, bool &gameOver, std::string &frame);
 int randomNumber(int max, int min);
+void gameInformations(std::pair<int, int> &snakeDir, std::vector<std::pair<int, int>> &snakeSeg);
 void generateFoods(std::vector<std::vector<int>> &map, int maxFood);
 void gameDone();
 void gameStartIntroduction();

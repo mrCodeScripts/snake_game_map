@@ -10,7 +10,6 @@
 #include "headers/gameControls.h"
 #include "headers/maps.h"
 
-
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
@@ -20,8 +19,6 @@ int main()
     std::vector<std::vector<int>> map;
     std::string block = u8"██";
     std::string snakeBod = u8"██";
-    // std::string block = u8" ";
-    // std::string snakeBod = u8" ";
 
     /**
      * FOR MORE SYMBOLS GO TO : https://www.alt-codes.net/square-symbols
@@ -39,6 +36,7 @@ int main()
 
     while (animate)
     {
+        std::string frame;
         hideCursor();
         if (!clearedScreen)
         {
@@ -53,75 +51,9 @@ int main()
         snakeControls(snakeDir, animate);
         updateSnake(snakeSeg, snakeDir);
         detectCollision(snakeSeg[0], map, gameOver);
-
-        if (gameOver)
-            animate = false;
-
-        for (int i = 0; i < map.size(); i++)
-        {
-            if (gameOver)
-                break;
-            for (int j = 0; j < map[0].size(); j++)
-            {
-                bool isSnake = false;
-                for (const auto &seg : snakeSeg)
-                {
-                    if (j == seg.first && i == seg.second)
-                    {
-                        isSnake = true;
-                        break;
-                    }
-                }
-
-                if (isSnake)
-                {
-                    std::cout << "\033[31m" << snakeBod << "\033[0m";
-                }
-                else if (i == 0 || i == map.size() - 1 || j == 0 || j == map[0].size() - 1 && map[i][j] == 0)
-                {
-                    std::cout << "\033[35m" << block << "\033[0m";
-                }
-                else
-                {
-                    if (map[i][j] == 1)
-                    {
-                        std::cout << "\033[36m" << block << "\033[0m";
-                    }
-                    else if (map[i][j] == 0)
-                    {
-                        std::cout << "\033[35m" << block << "\033[0m";
-                    }
-                }
-            }
-            std::cout << std::endl;
-        }
-
-        /**
-         * SNAKE INFORMATIONS
-         */
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
-
-        std::cout << "DIRECTION: [ X: " << snakeDir.first << " Y:" << snakeDir.second << " ]   " << std::endl;
-        std::cout << std::endl;
-
-        std::cout << "SNAKE BOD SEGMENTS [x, y]" << std::endl;
-        for (int j = 0; j < snakeSeg.size(); j++)
-        {
-            if (j == 0)
-            {
-                std::cout << "[" << snakeSeg[j].first << ", " << snakeSeg[j].second << "] HEAD      " << std::endl;
-            }
-            else if (j == snakeSeg.size() - 1)
-            {
-                std::cout << "[" << snakeSeg[j].first << ", " << snakeSeg[j].second << "] TAIL      " << std::endl;
-            }
-            else
-            {
-                std::cout << "[" << snakeSeg[j].first << ", " << snakeSeg[j].second << "] BODY     " << std::endl;
-            }
-        }
+        if (gameOver) animate = false;
+        renderGame(map, snakeSeg, snakeBod, block, gameOver, frame);
+        gameInformations(snakeDir, snakeSeg);
 
         if (gameOver)
         {
@@ -129,7 +61,8 @@ int main()
             gameOverScreen();
         }
 
-        if (!gameOver && !animate) {
+        if (!gameOver && !animate)
+        {
             fullClearScreen();
             gameDone();
         }
