@@ -16,5 +16,6 @@ void gameOverScreen();
 int randomNumber(int max, int min);
 void generateFoods(std::vector<std::vector<int>> &map, int maxFood);
 void gameDone();
+void gameStartIntroduction();
 
 #endif

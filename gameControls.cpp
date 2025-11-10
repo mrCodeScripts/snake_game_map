@@ -87,11 +87,6 @@ void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &m
 
 void chooseMap(std::vector<std::vector<int>> &map)
 {
-    std::cout << "WELCOME TO SNAKE GAME!" << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-
     int chosenMap;
     bool hasChosen = false;
     bool inputError = false;
@@ -99,10 +94,11 @@ void chooseMap(std::vector<std::vector<int>> &map)
     while (!hasChosen)
     {
         fullClearScreen();
-        std::cout << "CHOOSE YOUR MAP! (use the numbers): " << std::endl;
+        gameStartIntroduction();
+        std::cout << "\033[1;32m" "CHOOSE YOUR MAP! (use the numbers): " << "\033[0m" << std::endl;
         for (int i = 0; i < maps.size(); i++)
         {
-            std::cout << "[" << i << "]" << " MAP NAME: " << maps[i].first << std::endl;
+            std::cout << "\033[32m" << "[" << i << "]" << " MAP NAME: " << maps[i].first << "\033[0m" << std::endl;
         }
         if (inputError) {
             std::cout << R"(
@@ -220,4 +216,16 @@ void gameDone()
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ 
     )" << "\033[0m"
               << std::endl;
+}
+
+void gameStartIntroduction () {
+
+    std::cout << "\033[32m" << u8R"(
+░██████╗███╗░░██╗░█████╗░██╗░░██╗███████╗  ░██████╗░░█████╗░███╗░░░███╗███████╗
+██╔════╝████╗░██║██╔══██╗██║░██╔╝██╔════╝  ██╔════╝░██╔══██╗████╗░████║██╔════╝
+╚█████╗░██╔██╗██║███████║█████═╝░█████╗░░  ██║░░██╗░███████║██╔████╔██║█████╗░░
+░╚═══██╗██║╚████║██╔══██║██╔═██╗░██╔══╝░░  ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░
+██████╔╝██║░╚███║██║░░██║██║░╚██╗███████╗  ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗
+╚═════╝░╚═╝░░╚══╝╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝  ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝
+    )" << "\033[0m" << std::endl;
 }
