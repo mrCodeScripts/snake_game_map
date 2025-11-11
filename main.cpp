@@ -19,6 +19,7 @@ int main()
     std::vector<std::vector<int>> map;
     std::string block = u8"██";
     std::string snakeBod = u8"██";
+    std::string snakeFood = u8"██";
 
     /**
      * FOR MORE SYMBOLS GO TO : https://www.alt-codes.net/square-symbols
@@ -26,6 +27,8 @@ int main()
     chooseMap(map);
     int mapWidth = map[0].size();
     int mapHeight = map.size();
+    int minFoods = 3;
+    int maxFoods = 10;
     std::vector<std::pair<int, int>> snake;
     std::vector<std::pair<int, int>> snakeSeg = {
         {int(mapWidth / 2), int(mapHeight / 2)},
@@ -33,6 +36,11 @@ int main()
         {int(mapWidth / 2), int(mapHeight / 2) - 2},
     };
     std::pair<int, int> snakeDir = {1, 0};
+    std::vector<std::pair<int, int>> foods;
+    int score = 0;
+    auto lastFrame = std::chrono::high_resolution_clock::now();
+    float accumilator = 0.0f;
+    float dt;
 
     while (animate)
     {
@@ -48,12 +56,23 @@ int main()
             goToTop();
         }
 
+        if (foods.empty())
+        {
+            generateFoods(foods, map, minFoods, maxFoods);
+        }
+
         snakeControls(snakeDir, animate);
         updateSnake(snakeSeg, snakeDir);
-        detectCollision(snakeSeg[0], map, gameOver);
-        if (gameOver) animate = false;
-        renderGame(map, snakeSeg, snakeBod, block, gameOver, frame);
-        gameInformations(snakeDir, snakeSeg);
+        detectCollisionWall(snakeSeg[0], map, gameOver);
+        detectCollisionFood(foods, snakeSeg[0], snakeSeg, score);
+        if (gameOver)
+            animate = false;
+
+        deltaTime(lastFrame, dt);
+        if (accumilator >= dt) {
+            renderGame(map, snakeSeg, snakeBod, block, gameOver, foods, snakeFood, frame);
+            gameInformations(snakeDir, snakeSeg);
+        }
 
         if (gameOver)
         {
@@ -67,7 +86,7 @@ int main()
             gameDone();
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(800));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(800));
     }
 
     return 0;

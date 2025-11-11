@@ -69,7 +69,7 @@ void updateSnake(std::vector<std::pair<int, int>> &snakeSeg, std::pair<int, int>
     snakeSeg.pop_back();
 }
 
-void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &map, bool &gameOver)
+void detectCollisionWall(std::pair<int, int> &head, std::vector<std::vector<int>> &map, bool &gameOver)
 {
     // detect collision of wall
     // detect collision of body
@@ -81,6 +81,20 @@ void detectCollision(std::pair<int, int> &head, std::vector<std::vector<int>> &m
             {
                 gameOver = true;
             }
+        }
+    }
+}
+
+void detectCollisionFood (std::vector<std::pair<int, int>> &snakeFoods, std::pair<int, int> &snakeHead, std::vector<std::pair<int, int>> &snakeSeg, int &score) {
+    for (int i = 0; i < snakeFoods.size(); i++) {
+        if (snakeHead.first == snakeFoods[i].first && snakeHead.second == snakeFoods[i].second) {
+            std::pair<int, int> item = {snakeFoods[i].first, snakeFoods[i].second};
+            auto it = std::find(snakeFoods.begin(), snakeFoods.end(), item);
+            if (it != snakeFoods.end()) {
+                snakeFoods.erase(it);
+            } 
+            score++;
+            snakeSeg.push_back(snakeSeg.back()); // add length of the snake via .back() which coppies the last item and add it.
         }
     }
 }
@@ -191,7 +205,7 @@ void gameOverScreen()
               << std::endl;
 }
 
-void renderGame(std::vector<std::vector<int>> &map, std::vector<std::pair<int, int>> &snakeSeg, std::string &snakeBod, std::string &block, bool &gameOver, std::string &frame)
+void renderGame(std::vector<std::vector<int>> &map, std::vector<std::pair<int, int>> &snakeSeg, std::string &snakeBod, std::string &block, bool &gameOver, std::vector<std::pair<int, int>> &snakeFoods, std::string &snakeFood, std::string &frame)
 {
     for (int i = 0; i < map.size(); i++)
     {
@@ -209,10 +223,24 @@ void renderGame(std::vector<std::vector<int>> &map, std::vector<std::pair<int, i
                 }
             }
 
+            bool isFood = false;
+            for (const auto &food : snakeFoods)
+            {
+                if (j == food.first && i == food.second)
+                {
+                    isFood = true;
+                    break;
+                }
+            }
+
             if (isSnake)
             {
                 // std::cout << "\033[31m" << snakeBod << "\033[0m";
                 frame += "\033[31m" + snakeBod + "\033[0m";
+            }
+            else if (isFood)
+            {
+                frame += "\033[35m" + snakeFood + "\033[0m";
             }
             else if (i == 0 || i == map.size() - 1 || j == 0 || j == map[0].size() - 1 && map[i][j] == 0)
             {
@@ -238,6 +266,13 @@ void renderGame(std::vector<std::vector<int>> &map, std::vector<std::pair<int, i
     }
 
     std::cout << frame;
+}
+
+void deltaTime(std::chrono::high_resolution_clock::time_point &lastFrame, float &dt) {
+    auto now = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed = now - lastFrame;
+    dt = elapsed.count();
+    lastFrame = now;
 }
 
 void gameInformations(std::pair<int, int> &snakeDir, std::vector<std::pair<int, int>> &snakeSeg)
@@ -275,19 +310,30 @@ int randomNumber(int min, int max)
     return distribution(seedGenerator);
 }
 
-void generateFoods(std::vector<std::vector<int>> &maps, int maxFood)
+void generateFoods(std::vector<std::pair<int, int>> &foods,
+                   std::vector<std::vector<int>> &map,
+                   int &minFoods, int &maxFoods)
 {
-    std::vector<std::pair<int, int>> randomFoods;
-    for (int k = 0; k < maxFood; k++)
-    {
-    }
 
-    for (int i = 0; i < maps.size(); i++)
-    {
-        for (int j = 0; j < maps[0].size(); j++)
-        {
-        }
-    }
+    // make a logic to check inputed min and max foods and adjust it based on the map
+    std::vector<std::pair<int, int>> availableSpaces;
+
+    for (int y = 0; y < map.size(); y++)
+        for (int x = 0; x < map[y].size(); x++)
+            if (map[y][x] == 1)
+                availableSpaces.push_back({x, y});
+
+    if (availableSpaces.empty())
+        return;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::shuffle(availableSpaces.begin(), availableSpaces.end(), gen);
+
+    int randFood = std::uniform_int_distribution<>(minFoods, maxFoods)(gen);
+    randFood = std::min(randFood, (int)availableSpaces.size());
+
+    foods.assign(availableSpaces.begin(), availableSpaces.begin() + randFood);
 }
 
 void gameDone()
