@@ -27,8 +27,8 @@ int main()
     chooseMap(map);
     int mapWidth = map[0].size();
     int mapHeight = map.size();
-    int minFoods = 3;
-    int maxFoods = 10;
+    int minFoods = 10;
+    int maxFoods = 20;
     std::vector<std::pair<int, int>> snake;
     std::vector<std::pair<int, int>> snakeSeg = {
         {int(mapWidth / 2), int(mapHeight / 2)},
@@ -39,6 +39,8 @@ int main()
     std::vector<std::pair<int, int>> foods;
     int score = 0;
     auto lastFrame = std::chrono::high_resolution_clock::now();
+    float speed = 0.5f;
+    float speedInc = 0.3f;
     float accumilator = 0.0f;
     float dt;
 
@@ -62,17 +64,19 @@ int main()
         }
 
         snakeControls(snakeDir, animate);
-        updateSnake(snakeSeg, snakeDir);
+        deltaTime(lastFrame, speed, accumilator, dt);
+        while (accumilator >= 1.0f)
+        {
+            updateSnake(snakeSeg, snakeDir);
+            accumilator -= 1.0f; // this will stop the while loop when the accumilator reaches higher or equal to 1.0f
+        }
         detectCollisionWall(snakeSeg[0], map, gameOver);
-        detectCollisionFood(foods, snakeSeg[0], snakeSeg, score);
+        detectCollisionFood(foods, snakeSeg[0], snakeSeg, speed, speedInc, score);
         if (gameOver)
             animate = false;
 
-        deltaTime(lastFrame, dt);
-        if (accumilator >= dt) {
-            renderGame(map, snakeSeg, snakeBod, block, gameOver, foods, snakeFood, frame);
-            gameInformations(snakeDir, snakeSeg);
-        }
+        renderGame(map, snakeSeg, snakeBod, block, gameOver, foods, snakeFood, frame);
+        gameInformations(snakeDir, snakeSeg, speed, speedInc);
 
         if (gameOver)
         {

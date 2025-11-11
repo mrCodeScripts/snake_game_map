@@ -4,6 +4,7 @@
 #include <thread>
 #include <vector>
 #include <utility>
+#include <iomanip>
 #include <windows.h>
 #include <conio.h>
 #include <format>
@@ -85,7 +86,7 @@ void detectCollisionWall(std::pair<int, int> &head, std::vector<std::vector<int>
     }
 }
 
-void detectCollisionFood (std::vector<std::pair<int, int>> &snakeFoods, std::pair<int, int> &snakeHead, std::vector<std::pair<int, int>> &snakeSeg, int &score) {
+void detectCollisionFood (std::vector<std::pair<int, int>> &snakeFoods, std::pair<int, int> &snakeHead, std::vector<std::pair<int, int>> &snakeSeg, float &speed, float &speedInc, int &score) {
     for (int i = 0; i < snakeFoods.size(); i++) {
         if (snakeHead.first == snakeFoods[i].first && snakeHead.second == snakeFoods[i].second) {
             std::pair<int, int> item = {snakeFoods[i].first, snakeFoods[i].second};
@@ -94,6 +95,7 @@ void detectCollisionFood (std::vector<std::pair<int, int>> &snakeFoods, std::pai
                 snakeFoods.erase(it);
             } 
             score++;
+            speed += speedInc;
             snakeSeg.push_back(snakeSeg.back()); // add length of the snake via .back() which coppies the last item and add it.
         }
     }
@@ -268,20 +270,23 @@ void renderGame(std::vector<std::vector<int>> &map, std::vector<std::pair<int, i
     std::cout << frame;
 }
 
-void deltaTime(std::chrono::high_resolution_clock::time_point &lastFrame, float &dt) {
+void deltaTime(std::chrono::high_resolution_clock::time_point &lastFrame, float &speed, float &accumilator, float &dt) {
     auto now = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> elapsed = now - lastFrame;
     dt = elapsed.count();
+    accumilator += speed * dt;
     lastFrame = now;
 }
 
-void gameInformations(std::pair<int, int> &snakeDir, std::vector<std::pair<int, int>> &snakeSeg)
+void gameInformations(std::pair<int, int> &snakeDir, std::vector<std::pair<int, int>> &snakeSeg, float &speed, float &speedInc)
 {
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
 
     std::cout << "DIRECTION: [ X: " << snakeDir.first << " Y:" << snakeDir.second << " ]   " << std::endl;
+    std::cout << "SPEED (FPS): " << std::fixed << std::setprecision(2) << speed << std::endl;
+    std::cout << "SPEED INC (FPS): " << std::fixed << std::setprecision(2) << speedInc << std::endl;
     std::cout << std::endl;
 
     std::cout << "SNAKE BOD SEGMENTS [x, y]" << std::endl;
